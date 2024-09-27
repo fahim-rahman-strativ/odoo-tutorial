@@ -1,0 +1,13 @@
+<odoo>
+    <!-- Action -->
+    <record id="action_project_tracker" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">project.tracker</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="search_view_id" ref="view_project_tracker_search"/>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_project_tracker" name="Project Tracker" sequence="10"/>
+    <menuitem id="submenu_project_tracker" name="Projects" parent="menu_project_tracker" action="action_project_tracker"/>
+</odoo>

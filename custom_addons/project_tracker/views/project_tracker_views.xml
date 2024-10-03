@@ -52,16 +52,16 @@
     </record>
 
     <!-- Search View -->
-    <record id="view_project_tracker_search" model="ir.ui.view">
-        <field name="name">project.tracker.search</field>
-        <field name="model">project.tracker</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name"/>
-                <filter string="New" domain="[('status', '=', 'new')]"/>
-                <filter string="In Progress" domain="[('status', '=', 'in_progress')]"/>
-                <filter string="Done" domain="[('status', '=', 'done')]"/>
-            </search>
-        </field>
-    </record>
+<!--    <record id="view_project_tracker_search" model="ir.ui.view">-->
+<!--        <field name="name">project.tracker.search</field>-->
+<!--        <field name="model">project.tracker</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search>-->
+<!--                <field name="name"/>-->
+<!--                <filter string="New" domain="[('status', '=', 'new')]"/>-->
+<!--                <filter string="In Progress" domain="[('status', '=', 'in_progress')]"/>-->
+<!--                <filter string="Done" domain="[('status', '=', 'done')]"/>-->
+<!--            </search>-->
+<!--        </field>-->
+<!--    </record>-->
 </odoo>

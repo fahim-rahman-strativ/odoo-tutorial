@@ -1,60 +1,84 @@
 <odoo>
-  <data>
-<!--     explicit list view definition -->
+    <data>
+        <!--     explicit list view definition -->
 
-    <record model="ir.ui.view" id="real_estate.list">
-      <field name="name">real_estate list</field>
-      <field name="model">real_estate.real_estate</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
-        </tree>
-      </field>
-    </record>
-
-
-<!--     actions opening views on models -->
-
-    <record model="ir.actions.act_window" id="real_estate.action_window">
-      <field name="name">real_estate window</field>
-      <field name="res_model">real_estate.real_estate</field>
-      <field name="view_mode">tree,form</field>
-    </record>
+        <!--    <record model="ir.ui.view" id="estate_property_list">-->
+        <!--      <field name="name">real_estate list</field>-->
+        <!--      <field name="model">estate_property</field>-->
+        <!--      <field name="arch" type="xml">-->
+        <!--        <tree>-->
+        <!--          <field name="name"/>-->
+        <!--          <field name="value"/>-->
+        <!--          <field name="value2"/>-->
+        <!--        </tree>-->
+        <!--      </field>-->
+        <!--    </record>-->
 
 
-    <!-- server action to the one above -->
+        <!--     actions opening views on models -->
 
-    <record model="ir.actions.server" id="real_estate.action_server">
-      <field name="name">real_estate server</field>
-      <field name="model_id" ref="model_real_estate_real_estate"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": model._name,
-        }
-      </field>
-    </record>
+        <record id="estate_property_action" model="ir.actions.act_window">
+            <field name="name">Real Estate</field>
+            <field name="res_model">estate.property</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
 
-    <!-- Top menu item -->
+        <!--      <menuitem id="estate_property_menu_action" action="estate_property_action"/>-->
 
-    <menuitem name="real_estate" id="real_estate.menu_root"/>
+        <!-- server action to the one above -->
 
-    <!-- menu categories -->
+        <!--    <record id="estate_property_action_server" model="ir.actions.server">-->
+        <!--      <field name="name">real_estate server</field>-->
+        <!--      <field name="model_id" ref="estate.property"/>-->
+        <!--      <field name="state">code</field>-->
+        <!--      <field name="code">-->
+        <!--        action = {-->
+        <!--          "type": "ir.actions.act_window",-->
+        <!--          "view_mode": "tree,form",-->
+        <!--          "res_model": "estate.property",-->
+        <!--        }-->
+        <!--      </field>-->
+        <!--    </record>-->
 
-    <menuitem name="Menu 1" id="real_estate.menu_1" parent="real_estate.menu_root"/>
-    <menuitem name="Menu 2" id="real_estate.menu_2" parent="real_estate.menu_root"/>
+        <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to overwrite another one defined in
+            the base module in order to set new groups.
+        -->
+        <menuitem
+                id="estate_property_menu_root"
+                name="Real Estate"
+                groups="base.group_user"
+                sequence="10"
+        />
+            <!-- menu categories -->
+            <menuitem name="Properties" id="estate_property_menu_1" parent="estate_property_menu_root" sequence="1"/>
+            <menuitem name="Sales" id="estate_property_menu_2" parent="estate_property_menu_root" sequence="2"/>
 
-    <!-- actions -->
+            <!-- actions -->
 
-    <menuitem name="List" id="real_estate.menu_1_list" parent="real_estate.menu_1"
-              action="real_estate.action_window"/>
-    <menuitem name="Server to list" id="real_estate" parent="real_estate.menu_2"
-              action="real_estate.action_server"/>
+            <menuitem name="List" id="estate_property_menu_1_list" parent="estate_property_menu_1"
+                      action="estate_property_action"/>
+            <menuitem name="Server to list" id="estate_property_menu_1_server_to_list" parent="estate_property_menu_1"
+                      action="estate_property_action"/>
 
-  </data>
+
+        <!-- Top menu item -->
+
+        <!--    <menuitem name="Estate_property" id="estate_property.menu_root"/>-->
+
+        <!-- menu categories -->
+
+        <!--    <menuitem name="Properties" id="estate_property.menu_1" parent="estate_property.menu_root"/>-->
+        <!--    <menuitem name="Sales" id="estate_property.menu_2" parent="estate_property.menu_root"/>-->
+
+        <!-- actions -->
+
+        <!--    <menuitem name="List" id="estate_property.menu_1_list" parent="estate_property.menu_1"-->
+        <!--              action="estate_property.action_window"/>-->
+        <!--    <menuitem name="Server to list" id="estate_property" parent="estate_property.menu_2"-->
+        <!--              action="estate_property.action_server"/>-->
+
+    </data>
 </odoo>

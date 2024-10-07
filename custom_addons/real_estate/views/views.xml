@@ -1,30 +1,25 @@
 <odoo>
     <data>
-        <!--     explicit list view definition -->
-
-        <!--    <record model="ir.ui.view" id="estate_property_list">-->
-        <!--      <field name="name">real_estate list</field>-->
-        <!--      <field name="model">estate_property</field>-->
-        <!--      <field name="arch" type="xml">-->
-        <!--        <tree>-->
-        <!--          <field name="name"/>-->
-        <!--          <field name="value"/>-->
-        <!--          <field name="value2"/>-->
-        <!--        </tree>-->
-        <!--      </field>-->
-        <!--    </record>-->
-
 
         <!--     actions opening views on models -->
 
         <record id="estate_property_action" model="ir.actions.act_window">
-            <field name="name">Real Estate</field>
+            <field name="name">Property List</field>
             <field name="res_model">estate.property</field>
             <field name="view_mode">tree,form</field>
         </record>
 
+        <record id="estate_property_type_action" model="ir.actions.act_window">
+            <field name="name">Estate Property Type</field>
+            <field name="res_model">estate.property.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
-        <!--      <menuitem id="estate_property_menu_action" action="estate_property_action"/>-->
+        <record id="estate_property_tags_action" model="ir.actions.act_window">
+            <field name="name">Estate Property Tags</field>
+            <field name="res_model">estate.property.tags</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
         <!-- server action to the one above -->
 
@@ -41,44 +36,112 @@
         <!--      </field>-->
         <!--    </record>-->
 
-        <!-- Top menu item -->
-        <!--
-            This menu item's purpose is to overwrite another one defined in
-            the base module in order to set new groups.
-        -->
-        <menuitem
-                id="estate_property_menu_root"
-                name="Real Estate"
-                groups="base.group_user"
-                sequence="10"
-        />
-            <!-- menu categories -->
-            <menuitem name="Properties" id="estate_property_menu_1" parent="estate_property_menu_root" sequence="1"/>
-            <menuitem name="Sales" id="estate_property_menu_2" parent="estate_property_menu_root" sequence="2"/>
+<!--        Menu items-->
+        <menuitem id="estate_property_menu_root" name="Real Estate" groups="base.group_user" sequence="30">
 
-            <!-- actions -->
+            <menuitem name="Properties" id="estate_property_menu_1" sequence="10">
+                <menuitem name="List" id="estate_property_menu_1_list" action="estate_property_action" sequence="10"/>
+                <menuitem name="Contact" id="estate_property_menu_1_contact" action="estate_property_action" sequence="20"/>
+            </menuitem>
+            <menuitem name="Settings" id="estate_property_menu_2" sequence="20">
+                <menuitem name="Property Type" id="estate_property_menu_2_property_type" action="estate_property_type_action" sequence="10"/>
+                <menuitem name="Property Tags" id="estate_property_menu_2_property_tags" action="estate_property_tags_action" sequence="20"/>
+            </menuitem>
+        </menuitem>
 
-            <menuitem name="List" id="estate_property_menu_1_list" parent="estate_property_menu_1"
-                      action="estate_property_action"/>
-            <menuitem name="Server to list" id="estate_property_menu_1_server_to_list" parent="estate_property_menu_1"
-                      action="estate_property_action"/>
+<!--        List/tree view-->
+        <record id="property_table" model="ir.ui.view">
+            <field name="name">property.table</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <tree string="Info">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="postcode"/>
+                    <field name="bedrooms"/>
+                    <field name="living_area"/>
+                    <field name="garden"/>
+                    <field name="expected_price"/>
+                    <field name="selling_price"/>
+                </tree>
+            </field>
+        </record>
+<!--        Form view-->
+        <record id="property_view_form" model="ir.ui.view">
+            <field name="name">property_view_form</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <form string="Property details">
+                    <sheet>
+                        <group>
+                                <h1>
+                                    <field name="name"/>
+                                </h1>
+
+                                    <group>
+                                        <field name="tag_ids" widget="many2many_tags"/>
+                                        <field name="property_type_id"/>
+                                        <field name="postcode"/>
+                                        <field name="expected_price"/>
+                                        <field name="selling_price"/>
+                                        <field name="date_availability"/>
+                                    </group>
+
+                                <notebook>
+                                    <page string="Description">
+                                    <group>
+                                        <field name="description"/>
+                                        <field name="facades"/>
+                                        <field name="garage"/>
+                                        <field name="garden"/>
+                                        <field name="bedrooms"/>
+
+                                        <field name="living_area"/>
+
+                                        <field name="garden_area"/>
+
+                                        <field name="garden_orientation"/>
+
+                                        <field name="status"/>
+                                    </group>
+                                    </page>
+                                </notebook>
+                                <notebook>
+                                    <page string="Other Info">
+                                    <group>
+                                        <field name="user_id"/>
+                                    </group>
+                                    </page>
+                                </notebook>
 
 
-        <!-- Top menu item -->
 
-        <!--    <menuitem name="Estate_property" id="estate_property.menu_root"/>-->
 
-        <!-- menu categories -->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
-        <!--    <menuitem name="Properties" id="estate_property.menu_1" parent="estate_property.menu_root"/>-->
-        <!--    <menuitem name="Sales" id="estate_property.menu_2" parent="estate_property.menu_root"/>-->
+<!--        Search view-->
+        <record id="estate_property_search" model="ir.ui.view">
+            <field name="name">estate_property_search</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <search string="Property Search">
+                    <field name="name" string="Name" />
+                    <field name="bedrooms"/>
+                    <field name="expected_price"/>
+                    <field name="garden"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+<!--                    <group expand="1" string="Group By">-->
+<!--                        <filter string="Provider" name="provider" context="{'group_by':'delivery_type', 'residual_visible':True}"/>-->
+<!--                    </group>-->
+                </search>
+            </field>
+        </record>
 
-        <!-- actions -->
-
-        <!--    <menuitem name="List" id="estate_property.menu_1_list" parent="estate_property.menu_1"-->
-        <!--              action="estate_property.action_window"/>-->
-        <!--    <menuitem name="Server to list" id="estate_property" parent="estate_property.menu_2"-->
-        <!--              action="estate_property.action_server"/>-->
 
     </data>
 </odoo>

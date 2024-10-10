@@ -5,6 +5,7 @@ from tokenize import String
 from docopt import Required
 
 from odoo import fields, models
+from odoo.exceptions import ValidationError
 
 
 
@@ -19,6 +20,9 @@ class EstatePropertyOffers(models.Model):
          selection=[('1', 'Accepted'), ('2', 'Refused')])
     partner_id = fields.Many2one(comodel_name="res.partner", Required = True)
     property_id = fields.Many2one(comodel_name="estate.property", String="Offers", Required = True)
+    _sql_constraints = [
+        ('check_offer_price', 'CHECK(price >= 0 )',
+         'Price must be a positive amount.')]
 
     def accept_offer(self):
         self.status = "1"
@@ -30,4 +34,6 @@ class EstatePropertyOffers(models.Model):
         for record in self:
                 record.status = "2"
         return True
+
+
 

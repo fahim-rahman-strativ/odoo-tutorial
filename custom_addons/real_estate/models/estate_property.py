@@ -39,6 +39,16 @@ class EstateProperty(models.Model):
     total_area = fields.Float(compute='_compute_total', readonly=True)
     # best_price = fields.Float(compute='_compute_best', readonly=True)
 
+    _sql_constraints = [
+        ('check_expected_price', 'CHECK(expected_price >= 0 )',
+         'Price must be a positive amount.'),('check_selling_price', 'CHECK(selling_price >= 0 )',
+         'Price must be a positive amount.')
+    ]
+
+    # ('check_minimum_selling_price', 'CHECK(selling_price >= (0.9*expected_price)',
+    #  'Selling price must be a positive amount.'),
+    # AND selling_price >= 0 AND offer_ids.price >= 0
+
     @api.onchange("garden")
     def _onchange_garden(self):
         for record in self:
@@ -50,6 +60,12 @@ class EstateProperty(models.Model):
     def _compute_total(self):
         for record in self:
             record.total_area = record.living_area + record.garden_area
+
+    @api.constrains('expected_price', 'selling_price')
+    def _check_date_end(self):
+        for record in self:
+            if record.selling_price < (record.expected_price*0.9):
+                raise ValidationError("Price must be 90 percent of expected price or higher")
 
     def sold(self):
         for record in self:

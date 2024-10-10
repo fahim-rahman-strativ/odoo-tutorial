@@ -61,6 +61,7 @@
                     <field name="name"/>
                     <field name="description"/>
                     <field name="postcode"/>
+                    <field name="status"/>
                     <field name="bedrooms"/>
                     <field name="living_area"/>
                     <field name="garden"/>

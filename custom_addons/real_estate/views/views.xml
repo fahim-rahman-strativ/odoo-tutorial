@@ -36,20 +36,23 @@
         <!--      </field>-->
         <!--    </record>-->
 
-<!--        Menu items-->
+        <!--        Menu items-->
         <menuitem id="estate_property_menu_root" name="Real Estate" groups="base.group_user" sequence="30">
 
             <menuitem name="Properties" id="estate_property_menu_1" sequence="10">
                 <menuitem name="List" id="estate_property_menu_1_list" action="estate_property_action" sequence="10"/>
-                <menuitem name="Contact" id="estate_property_menu_1_contact" action="estate_property_action" sequence="20"/>
+                <menuitem name="Contact" id="estate_property_menu_1_contact" action="estate_property_action"
+                          sequence="20"/>
             </menuitem>
             <menuitem name="Settings" id="estate_property_menu_2" sequence="20">
-                <menuitem name="Property Type" id="estate_property_menu_2_property_type" action="estate_property_type_action" sequence="10"/>
-                <menuitem name="Property Tags" id="estate_property_menu_2_property_tags" action="estate_property_tags_action" sequence="20"/>
+                <menuitem name="Property Type" id="estate_property_menu_2_property_type"
+                          action="estate_property_type_action" sequence="10"/>
+                <menuitem name="Property Tags" id="estate_property_menu_2_property_tags"
+                          action="estate_property_tags_action" sequence="20"/>
             </menuitem>
         </menuitem>
 
-<!--        List/tree view-->
+        <!--        List/tree view-->
         <record id="property_table" model="ir.ui.view">
             <field name="name">property.table</field>
             <field name="model">estate.property</field>
@@ -66,7 +69,22 @@
                 </tree>
             </field>
         </record>
-<!--        Form view-->
+
+        <!--        Offers tree view-->
+
+        <record id="offers_list" model="ir.ui.view">
+            <field name="name">Offers list</field>
+            <field name="model">estate.property.offers</field>
+            <field name="arch" type="xml">
+                <tree string="Offers">
+                    <field name="price"/>
+                    <field name="partner_id"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--        Form view-->
         <record id="property_view_form" model="ir.ui.view">
             <field name="name">property_view_form</field>
             <field name="model">estate.property</field>
@@ -74,21 +92,22 @@
                 <form string="Property details">
                     <sheet>
                         <group>
-                                <h1>
-                                    <field name="name"/>
-                                </h1>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
 
-                                    <group>
-                                        <field name="tag_ids" widget="many2many_tags"/>
-                                        <field name="property_type_id"/>
-                                        <field name="postcode"/>
-                                        <field name="expected_price"/>
-                                        <field name="selling_price"/>
-                                        <field name="date_availability"/>
-                                    </group>
+                            <group>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="property_type_id"/>
+                                <field name="postcode"/>
+                                <field name="expected_price"/>
+<!--                                <field name="best_price"/>-->
+                                <field name="selling_price"/>
+                                <field name="date_availability"/>
+                            </group>
 
-                                <notebook>
-                                    <page string="Description">
+                            <notebook>
+                                <page string="Description">
                                     <group>
                                         <field name="description"/>
                                         <field name="facades"/>
@@ -100,21 +119,25 @@
 
                                         <field name="garden_area"/>
 
+                                        <field name="total_area"/>
+
                                         <field name="garden_orientation"/>
 
                                         <field name="status"/>
                                     </group>
-                                    </page>
-                                </notebook>
-                                <notebook>
-                                    <page string="Other Info">
+                                </page>
+                                <page string="Other Info">
                                     <group>
                                         <field name="user_id"/>
+                                        <field name="partner_id"/>
                                     </group>
-                                    </page>
-                                </notebook>
-
-
+                                </page>
+                                <page string="Offers">
+                                    <tree string="Offer list">
+                                        <field name="offer_ids"/>
+                                    </tree>
+                                </page>
+                            </notebook>
 
 
                         </group>
@@ -123,21 +146,45 @@
             </field>
         </record>
 
-<!--        Search view-->
+        <!--        Offers form view-->
+
+        <record id="offers_form" model="ir.ui.view">
+            <field name="name">offers_form</field>
+            <field name="model">estate.property.offers</field>
+            <field name="arch" type="xml">
+                <form string="Offers">
+                    <sheet>
+                        <group>
+                            <notebook>
+                                <page string="Offers">
+                                    <tree string="Offer list">
+                                        <field name="price"/>
+                                        <field name="partner_id"/>
+                                        <field name="status"/>
+                                    </tree>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--        Search view-->
         <record id="estate_property_search" model="ir.ui.view">
             <field name="name">estate_property_search</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
                 <search string="Property Search">
-                    <field name="name" string="Name" />
+                    <field name="name" string="Name"/>
                     <field name="bedrooms"/>
                     <field name="expected_price"/>
                     <field name="garden"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-<!--                    <group expand="1" string="Group By">-->
-<!--                        <filter string="Provider" name="provider" context="{'group_by':'delivery_type', 'residual_visible':True}"/>-->
-<!--                    </group>-->
+                    <!--                    <group expand="1" string="Group By">-->
+                    <!--                        <filter string="Provider" name="provider" context="{'group_by':'delivery_type', 'residual_visible':True}"/>-->
+                    <!--                    </group>-->
                 </search>
             </field>
         </record>

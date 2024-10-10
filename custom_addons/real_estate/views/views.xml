@@ -57,11 +57,12 @@
             <field name="name">property.table</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
-                <tree string="Info">
+                <tree string="Info" decoration-success="status=='3'" decoration-danger="status=='4'" decoration-muted="status=='5'">
                     <field name="name"/>
                     <field name="description"/>
                     <field name="postcode"/>
                     <field name="status"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
                     <field name="bedrooms"/>
                     <field name="living_area"/>
                     <field name="garden"/>
@@ -77,7 +78,7 @@
             <field name="name">Offers list</field>
             <field name="model">estate.property.offers</field>
             <field name="arch" type="xml">
-                <tree string="Offers">
+                <tree string="Offers" decoration-success="status=='1'" decoration-danger="status=='2'">
                     <field name="price"/>
                     <field name="partner_id"/>
                     <button name="accept_offer" string="Accept" type="object" icon="fa-check"/>
@@ -98,6 +99,7 @@
     <!--                        Adding a button-->
                             <button name="sold" type="object" string="Sold"/>
                             <button name="cancel" type="object" string="Cancel"/>
+                            <field name="status" widget="statusbar" statusbar_visible="1,2,3,5"/>
                         </header>
                         <group>
                             <h1>
@@ -105,9 +107,8 @@
                             </h1>
 
                             <group>
-                                <field name="tag_ids" widget="many2many_tags"/>
-                                <field name="status"/>
-                                <field name="property_type_id"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
+                                <field name="property_type_id" options="{'no_create': True, 'no_open': True}"/>
                                 <field name="postcode"/>
                                 <field name="expected_price"/>
 <!--                                <field name="best_price"/>-->
@@ -126,11 +127,11 @@
 
                                         <field name="living_area"/>
 
-                                        <field name="garden_area"/>
+                                        <field name="garden_area" attrs="{'invisible': [('garden', '=', False)]}"/>
 
                                         <field name="total_area"/>
 
-                                        <field name="garden_orientation"/>
+                                        <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}"/>
                                     </group>
                                 </page>
                                 <page string="Other Info">
@@ -141,7 +142,7 @@
                                 </page>
                                 <page string="Offers">
                                     <tree string="Offer list">
-                                        <field name="offer_ids"/>
+                                        <field name="offer_ids" attrs="{'readonly': [('status', '=', '5')]}"/>
                                     </tree>
                                 </page>
                             </notebook>
@@ -167,10 +168,34 @@
                                        <group>
                                             <field name="price" string="Price"/>
                                             <field name="partner_id" string="Name"/>
-                                           <field name="status" string="Status"/>
+                                           <field name="status" string="Status" attrs="{'invisible': [('status','=','1')]}"/>
                                        </group>
                                 </page>
                             </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+<!--        Property type inline view-->
+
+        <record id="estate_property_types" model="ir.ui.view">
+            <field name="name">Estate_property_type_list</field>
+            <field name="model">estate.property.type</field>
+            <field name="arch" type="xml">
+                <form string="Event Category">
+                    <sheet>
+                        <group>
+
+                            <field name="property_ids" >
+                                <tree string="Tags" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="title"/>
+                                    <field name="expected_price"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                 </form>

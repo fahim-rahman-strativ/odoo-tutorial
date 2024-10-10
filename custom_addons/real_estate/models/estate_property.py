@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Estate Property"
+    _order = "id desc"
 
 
     name = fields.Char(required=True)
@@ -35,7 +36,7 @@ class EstateProperty(models.Model):
         help="Orientation is used to point direction of the garden")
     active = fields.Boolean(default=True)
     status = fields.Selection(string='Status',
-        selection=[('1', 'New'), ('2', 'Offer received'), ('3', 'Sold'), ('4', 'Cancelled'),('5','Offer accepted')], default="1")
+        selection=[('1', 'New'), ('2', 'Offer received'), ('3', 'Offer accepted'), ('4', 'Cancelled'),('5','Sold')], default="1")
     total_area = fields.Float(compute='_compute_total', readonly=True)
     # best_price = fields.Float(compute='_compute_best', readonly=True)
 
@@ -72,12 +73,12 @@ class EstateProperty(models.Model):
             if record.status =="4":
                 raise ValidationError("Cancelled properties can't be sold.")
             else:
-                record.status = "3"
+                record.status = "5"
         return True
 
     def cancel(self):
         for record in self:
-            if record.status == "3":
+            if record.status == "5":
                 raise ValidationError("Sold properties can't be cancelled.")
             else:
                 record.status = "4"

@@ -13,6 +13,7 @@ from odoo.exceptions import ValidationError
 class EstatePropertyOffers(models.Model):
     _name = "estate.property.offers"
     _description = "Estate Property Offers"
+    _order = "price desc"
 
 
     price = fields.Float()

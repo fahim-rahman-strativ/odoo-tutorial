@@ -79,6 +79,8 @@
                 <tree string="Offers">
                     <field name="price"/>
                     <field name="partner_id"/>
+                    <button name="accept_offer" string="Accept" type="object" icon="fa-check"/>
+                    <button name="refuse_offer" string="Refuse" type="object" icon="fa-times"/>
                     <field name="status"/>
                 </tree>
             </field>
@@ -91,6 +93,11 @@
             <field name="arch" type="xml">
                 <form string="Property details">
                     <sheet>
+                        <header>
+    <!--                        Adding a button-->
+                            <button name="sold" type="object" string="Sold"/>
+                            <button name="cancel" type="object" string="Cancel"/>
+                        </header>
                         <group>
                             <h1>
                                 <field name="name"/>
@@ -98,6 +105,7 @@
 
                             <group>
                                 <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="status"/>
                                 <field name="property_type_id"/>
                                 <field name="postcode"/>
                                 <field name="expected_price"/>
@@ -122,14 +130,12 @@
                                         <field name="total_area"/>
 
                                         <field name="garden_orientation"/>
-
-                                        <field name="status"/>
                                     </group>
                                 </page>
                                 <page string="Other Info">
                                     <group>
                                         <field name="user_id"/>
-                                        <field name="partner_id"/>
+                                        <field name="buyer_id"/>
                                     </group>
                                 </page>
                                 <page string="Offers">
@@ -156,12 +162,12 @@
                     <sheet>
                         <group>
                             <notebook>
-                                <page string="Offers">
-                                    <tree string="Offer list">
-                                        <field name="price"/>
-                                        <field name="partner_id"/>
-                                        <field name="status"/>
-                                    </tree>
+                                <page string="Offer Details">
+                                       <group>
+                                            <field name="price" string="Price"/>
+                                            <field name="partner_id" string="Name"/>
+                                           <field name="status" string="Status"/>
+                                       </group>
                                 </page>
                             </notebook>
                         </group>

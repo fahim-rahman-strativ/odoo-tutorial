@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.exceptions import ValidationError
 
 
 class EstateProperty(models.Model):
@@ -14,7 +15,7 @@ class EstateProperty(models.Model):
     property_type_id = fields.Many2one("estate.property.type", string="Property type")
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True,
                               default=lambda self: self.env.user)
-    partner_id = fields.Many2one('res.partner', string='Buyer', index=True, tracking=True)
+    buyer_id = fields.Many2one('res.partner', string='Buyer', index=True, tracking=True)
 
     tag_ids = fields.Many2many(comodel_name="estate.property.tags")
     offer_ids = fields.One2many("estate.property.offers", "property_id", string= "Offers")
@@ -49,6 +50,30 @@ class EstateProperty(models.Model):
     def _compute_total(self):
         for record in self:
             record.total_area = record.living_area + record.garden_area
+
+    def sold(self):
+        for record in self:
+            if record.status =="4":
+                raise ValidationError("Cancelled properties can't be sold.")
+            else:
+                record.status = "3"
+        return True
+
+    def cancel(self):
+        for record in self:
+            if record.status == "3":
+                raise ValidationError("Sold properties can't be cancelled.")
+            else:
+                record.status = "4"
+        return True
+
+
+
+
+    # def accept_offer(self):
+    #     for record in self:
+    #             record.selling_price = record.offer_ids.price
+    #     return True
 
 
     # @api.depends('offer_ids.price')

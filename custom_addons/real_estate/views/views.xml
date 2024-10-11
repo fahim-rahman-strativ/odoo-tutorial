@@ -20,21 +20,7 @@
             <field name="res_model">estate.property.tags</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-        <!-- server action to the one above -->
-
-        <!--    <record id="estate_property_action_server" model="ir.actions.server">-->
-        <!--      <field name="name">real_estate server</field>-->
-        <!--      <field name="model_id" ref="estate.property"/>-->
-        <!--      <field name="state">code</field>-->
-        <!--      <field name="code">-->
-        <!--        action = {-->
-        <!--          "type": "ir.actions.act_window",-->
-        <!--          "view_mode": "tree,form",-->
-        <!--          "res_model": "estate.property",-->
-        <!--        }-->
-        <!--      </field>-->
-        <!--    </record>-->
+        
 
         <!--        Menu items-->
         <menuitem id="estate_property_menu_root" name="Real Estate" groups="base.group_user" sequence="30">
@@ -189,7 +175,7 @@
                         <group>
 
                             <field name="property_ids" >
-                                <tree string="Tags" editable="bottom">
+                                <tree string="Tags" editable="top">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title"/>
                                     <field name="expected_price"/>

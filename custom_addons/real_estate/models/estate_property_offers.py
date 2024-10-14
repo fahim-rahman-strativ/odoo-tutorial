@@ -18,22 +18,22 @@ class EstatePropertyOffers(models.Model):
 
     price = fields.Float()
     status = fields.Selection(string='Status',
-         selection=[('1', 'Accepted'), ('2', 'Refused')])
+         selection=[('accepted', 'Accepted'), ('refused', 'Refused')])
     partner_id = fields.Many2one(comodel_name="res.partner", Required = True)
     property_id = fields.Many2one(comodel_name="estate.property", String="Offers", Required = True)
     _sql_constraints = [
         ('check_offer_price', 'CHECK(price >= 0 )',
          'Price must be a positive amount.')]
 
-    def accept_offer(self):
-        self.status = "1"
+    def action_accept_offer(self):
+        self.status = "accepted"
         self.property_id.selling_price = self.price
         self.property_id.buyer_id = self.partner_id
         # return True
 
-    def refuse_offer(self):
+    def action_refuse_offer(self):
         for record in self:
-                record.status = "2"
+                record.status = "refused"
         return True
 
 

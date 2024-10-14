@@ -20,7 +20,7 @@
             <field name="res_model">estate.property.tags</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+
 
         <!--        Menu items-->
         <menuitem id="estate_property_menu_root" name="Real Estate" groups="base.group_user" sequence="30">
@@ -43,7 +43,7 @@
             <field name="name">property.table</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
-                <tree string="Info" decoration-success="status=='3'" decoration-danger="status=='4'" decoration-muted="status=='5'">
+                <tree string="Info" decoration-success="status=='offer_accepted'" decoration-danger="status=='cancelled'" decoration-muted="status=='sold'">
                     <field name="name"/>
                     <field name="description"/>
                     <field name="postcode"/>
@@ -64,11 +64,11 @@
             <field name="name">Offers list</field>
             <field name="model">estate.property.offers</field>
             <field name="arch" type="xml">
-                <tree string="Offers" decoration-success="status=='1'" decoration-danger="status=='2'">
+                <tree string="Offers" decoration-success="status=='accepted'" decoration-danger="status=='refused'">
                     <field name="price"/>
                     <field name="partner_id"/>
-                    <button name="accept_offer" string="Accept" type="object" icon="fa-check"/>
-                    <button name="refuse_offer" string="Refuse" type="object" icon="fa-times"/>
+                    <button name="action_accept_offer" string="Accept" type="object" icon="fa-check"/>
+                    <button name="action_refuse_offer" string="Refuse" type="object" icon="fa-times"/>
                     <field name="status"/>
                 </tree>
             </field>
@@ -83,9 +83,9 @@
                     <sheet>
                         <header>
     <!--                        Adding a button-->
-                            <button name="sold" type="object" string="Sold"/>
-                            <button name="cancel" type="object" string="Cancel"/>
-                            <field name="status" widget="statusbar" statusbar_visible="1,2,3,5"/>
+                            <button name="action_sold" type="object" string="Sold"/>
+                            <button name="action_cancel" type="object" string="Cancel"/>
+                            <field name="status" widget="statusbar" options="{'clickable':1}" statusbar_visible="new,offer_received,offer_accepted,sold"/>
                         </header>
                         <group>
                             <h1>
@@ -128,7 +128,7 @@
                                 </page>
                                 <page string="Offers">
                                     <tree string="Offer list">
-                                        <field name="offer_ids" attrs="{'readonly': [('status', '=', '5')]}"/>
+                                        <field name="offer_ids" attrs="{'readonly': [('status', '=', 'sold')]}"/>
                                     </tree>
                                 </page>
                             </notebook>

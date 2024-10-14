@@ -2,12 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Estate Property"
+    # _inherit = "estate.property"
     _order = "id desc"
 
 
@@ -32,18 +33,17 @@ class EstateProperty(models.Model):
     garden = fields.Boolean()
     garden_area = fields.Integer()
     garden_orientation = fields.Selection(string='Garden-Orientation',
-        selection=[('1', 'East'), ('2', 'West'), ('3', 'North'), ('4', 'South')],
+        selection=[('east', 'East'), ('west', 'West'), ('north', 'North'), ('south', 'South')],
         help="Orientation is used to point direction of the garden")
     active = fields.Boolean(default=True)
     status = fields.Selection(string='Status',
-        selection=[('1', 'New'), ('2', 'Offer received'), ('3', 'Offer accepted'), ('4', 'Cancelled'),('5','Sold')], default="1")
+        selection=[('new', 'New'), ('offer_received', 'Offer received'), ('offer_accepted', 'Offer accepted'), ('cancelled', 'Cancelled'),('sold','Sold')], default="new")
     total_area = fields.Float(compute='_compute_total', readonly=True)
     # best_price = fields.Float(compute='_compute_best', readonly=True)
 
     _sql_constraints = [
-        ('check_expected_price', 'CHECK(expected_price >= 0 )',
-         'Price must be a positive amount.'),('check_selling_price', 'CHECK(selling_price >= 0 )',
-         'Price must be a positive amount.')
+        ('check_expected_price', 'CHECK(expected_price >= 0 )','Price must be a positive amount.'),
+        ('check_selling_price', 'CHECK(selling_price >= 0 )', 'Price must be a positive amount.')
     ]
 
     # ('check_minimum_selling_price', 'CHECK(selling_price >= (0.9*expected_price)',
@@ -54,7 +54,7 @@ class EstateProperty(models.Model):
     def _onchange_garden(self):
         for record in self:
             record.total_area = record.living_area
-            if record.garden == 'True' :
+            if record.garden :
                 record.total_area = record.living_area+record.garden_area
 
     @api.depends('living_area', 'garden_area')
@@ -68,24 +68,26 @@ class EstateProperty(models.Model):
             if record.selling_price < (record.expected_price*0.9):
                 raise ValidationError("Price must be 90 percent of expected price or higher")
 
-    def sold(self):
+    def action_sold(self):
         for record in self:
-            if record.status =="4":
+            if record.status =="cancelled":
                 raise ValidationError("Cancelled properties can't be sold.")
             else:
-                record.status = "5"
+                record.status = "sold"
         return True
 
-    def cancel(self):
+    def action_cancel(self):
         for record in self:
-            if record.status == "5":
+            if record.status == "sold":
                 raise ValidationError("Sold properties can't be cancelled.")
             else:
-                record.status = "4"
+                record.status = "cancelled"
         return True
 
-
-
+    # @api.ondelete(at_uninstall=False)
+    # def _unlink_if_new_or_cancelled(self):
+    #     if any(user.active for user in self):
+    #         raise UserError("Can't delete an active user!")
 
     # def accept_offer(self):
     #     for record in self:

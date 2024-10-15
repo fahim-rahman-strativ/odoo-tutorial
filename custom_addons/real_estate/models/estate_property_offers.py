@@ -4,8 +4,8 @@ from tokenize import String
 
 from docopt import Required
 
-from odoo import fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models, api
+from odoo.exceptions import UserError
 
 
 
@@ -35,6 +35,7 @@ class EstatePropertyOffers(models.Model):
         for record in self:
                 record.status = "refused"
         return True
+
 
 
 

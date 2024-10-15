@@ -4,4 +4,3 @@ access_estate_property_type,access_estate_property_type,model_estate_property_ty
 access_estate_property_tags,access_estate_property_tags,model_estate_property_tags,base.group_user,1,1,1,1
 access_estate_property_offers,access_estate_property_offers,model_estate_property_offers,base.group_user,1,1,1,1
 access_estate_property_type_list,access_estate_property_type_list,model_estate_property_type_list,base.group_user,1,1,1,1
-access_inherited_models,access_inherited_models,model_inherited_models,base.group_user,1,1,1,1

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from pickle import FALSE
 
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError, UserError
@@ -8,7 +9,6 @@ from odoo.exceptions import ValidationError, UserError
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Estate Property"
-    # _inherit = "estate.property"
     _order = "id desc"
 
 
@@ -18,7 +18,6 @@ class EstateProperty(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True,
                               default=lambda self: self.env.user)
     buyer_id = fields.Many2one('res.partner', string='Buyer', index=True, tracking=True)
-
     tag_ids = fields.Many2many(comodel_name="estate.property.tags")
     offer_ids = fields.One2many("estate.property.offers", "property_id", string= "Offers")
 
@@ -84,10 +83,24 @@ class EstateProperty(models.Model):
                 record.status = "cancelled"
         return True
 
-    # @api.ondelete(at_uninstall=False)
-    # def _unlink_if_new_or_cancelled(self):
-    #     if any(user.active for user in self):
-    #         raise UserError("Can't delete an active user!")
+    # @api.model
+    # def ondelete(self, vals):
+    #     if self.env['estate.property'].browse(vals['status']) != "new":
+    #         raise UserError("Can't delete this property!")
+    #     elif self.env['estate.property'].browse(vals['status']) != "cancelled":
+    #         raise UserError("Can't delete this property!")
+    #     else:
+    #         return True
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_new_or_cancelled(self):
+        if self.status != "new" or self.status != "cancelled":
+            raise UserError("Can't delete this property")
+
+    # @api.model
+    # def create(self):
+    #     if self.offer_ids:
+    #         self.status = "offer_received"
 
     # def accept_offer(self):
     #     for record in self:
